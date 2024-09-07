@@ -1,0 +1,41 @@
+import psycopg2
+
+# Conectar ao banco de dados
+conn = psycopg2.connect(
+    dbname="biblioteca",
+    user="seu_usuario",  # Substitua pelo seu usuário
+    password="sua_senha",  # Substitua pela sua senha
+    host="localhost",
+    port="5432"
+)
+
+# Criar um cursor
+cur = conn.cursor()
+
+# Função para adicionar um livro
+def adicionar_livro(titulo, isbn, ano_publicacao, sinopse, autor_id, categoria_id):
+    cur.execute("""
+        INSERT INTO Livros (titulo, isbn, ano_publicacao, sinopse, autor_id, categoria_id)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (titulo, isbn, ano_publicacao, sinopse, autor_id, categoria_id))
+    conn.commit()
+
+# Função para buscar livros disponíveis
+def buscar_livros_disponiveis():
+    cur.execute("SELECT * FROM Livros WHERE disponivel = TRUE")
+    livros = cur.fetchall()
+    return livros
+
+# Exemplo de uso
+if __name__ == "__main__":
+    # Adicionar um livro
+    adicionar_livro("O Pequeno Príncipe", "1234567890123", 1943, "Um clássico da literatura infantil.", 1, 1)
+    
+    # Buscar e exibir livros disponíveis
+    livros = buscar_livros_disponiveis()
+    for livro in livros:
+        print(livro)
+
+# Fechar a conexão
+cur.close()
+conn.close()
