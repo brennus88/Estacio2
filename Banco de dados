@@ -1,0 +1,49 @@
+-- Criação do banco de dados
+CREATE DATABASE biblioteca;
+
+-- Conectando ao banco de dados
+\c biblioteca
+
+-- Tabela para autores
+CREATE TABLE Autores (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    data_nascimento DATE,
+    nacionalidade VARCHAR(50)
+);
+
+-- Tabela para categorias
+CREATE TABLE Categorias (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
+
+-- Tabela para livros
+CREATE TABLE Livros (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    isbn VARCHAR(13) UNIQUE,
+    ano_publicacao YEAR,
+    sinopse TEXT,
+    autor_id INT REFERENCES Autores(id),
+    categoria_id INT REFERENCES Categorias(id),
+    disponivel BOOLEAN DEFAULT TRUE
+);
+
+-- Tabela para usuários
+CREATE TABLE Usuarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    data_nascimento DATE,
+    endereco TEXT
+);
+
+-- Tabela para empréstimos
+CREATE TABLE Emprestimos (
+    id SERIAL PRIMARY KEY,
+    livro_id INT REFERENCES Livros(id),
+    data_emprestimo DATE,
+    data_devolucao DATE,
+    usuario_nome VARCHAR(100)
+);
